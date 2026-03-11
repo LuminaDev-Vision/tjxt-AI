@@ -11,6 +11,9 @@ import org.springframework.context.annotation.Configuration;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * 系统提示配置
+ */
 @Slf4j
 @Getter
 @Configuration
