@@ -1,5 +1,6 @@
 package com.tianji.aigc.controller;
 
+import com.tianji.aigc.domain.vo.MessageVO;
 import com.tianji.aigc.service.ChatSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +14,34 @@ public class SessionController {
 
     private final ChatSessionService chatSessionService;
 
+    /**
+     * 创建会话
+     * @param num 会话数量
+     * @return 会话列表
+     */
     @PostMapping
     public com.tianji.aigc.vo.SessionVO createSession(@RequestParam(value = "n", defaultValue = "3") Integer num) {
         return chatSessionService.createSession(num);
     }
 
+    /**
+     * 获取热门问题
+     * @param num 问题数量
+     * @return 问题列表
+     */
     @GetMapping("/hot")
     public List<com.tianji.aigc.vo.SessionVO.Example> getHotQuestions(@RequestParam(value = "n", defaultValue = "3") Integer num){
         return chatSessionService.getHotQuestions(num);
     }
+
+    /**
+     * 查询单个历史对话详情
+     *
+     * @return 对话记录列表
+     */
+    @GetMapping("/{sessionId}")
+    public List<MessageVO> queryBySessionId(@PathVariable("sessionId") String sessionId) {
+        return this.chatSessionService.queryBySessionId(sessionId);
+    }
+
 }

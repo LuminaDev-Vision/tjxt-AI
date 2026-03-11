@@ -1,5 +1,6 @@
 package com.tianji.aigc.service;
 
+import com.tianji.aigc.domain.vo.MessageVO;
 import com.tianji.aigc.vo.SessionVO;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface ChatSessionService {
     SessionVO createSession(Integer num);
 
     List<SessionVO.Example> getHotQuestions(Integer num);
+
+    List<MessageVO> queryBySessionId(String sessionId);
 }

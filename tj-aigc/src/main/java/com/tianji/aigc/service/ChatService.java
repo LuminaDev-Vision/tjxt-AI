@@ -12,7 +12,7 @@ public interface ChatService {
     void stop(String sessionId);
 
     static String getConversationId(String sessionId){
-        return UserContext.getUser() + ":" + sessionId;
+        return UserContext.getUser() + "_" + sessionId;
     }
 
 }

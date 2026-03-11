@@ -1,5 +1,6 @@
-package com.tianji.aigc.Memory;
+package com.tianji.aigc.memory;
 
+import cn.hutool.core.collection.CollStreamUtil;
 import cn.hutool.json.JSONUtil;
 import com.tianji.common.utils.CollUtils;
 import jakarta.annotation.Resource;
@@ -36,7 +37,7 @@ public class RedisChatMemory implements ChatMemory {
         var key = this.getKey(conversationId);
         var listOps = this.stringRedisTemplate.boundListOps(key); // 绑定到一个 List 类型的 key
         messages.forEach(message -> {
-            listOps.rightPush(JSONUtil.toJsonStr(message)); // 将消息序列化为 JSON 字符串并添加到 List 的右侧
+            listOps.rightPush(MessageUtil.toJson(message)); // 将消息序列化为 JSON 字符串并添加到 List 的右侧
         });
     }
 
@@ -46,8 +47,19 @@ public class RedisChatMemory implements ChatMemory {
 
     @Override
     public List<Message> get(String conversationId, int lastN) {
-        // 暂时不实现
-        return List.of();
+        if (lastN <= 0){
+            return List.of();
+        }
+        // 生成Redis键名用于存储会话消息
+        var redisKey = this.getKey(conversationId);
+        // 获取Redis列表操作对象
+        var listOps = this.stringRedisTemplate.boundListOps(redisKey);
+
+        // 从Redis列表中获取指定范围的元素（从第一个元素开始到lastN位置）
+        var messages = listOps.range(0, lastN);
+        // 将Redis返回的字符串列表转换为Message对象列表
+        return CollStreamUtil.toList(messages, MessageUtil::toMessage);
+
     }
 
     @Override
