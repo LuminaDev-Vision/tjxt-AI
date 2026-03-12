@@ -11,6 +11,7 @@ import com.tianji.aigc.constants.Constant;
 import com.tianji.aigc.domain.vo.ChatEventVO;
 import com.tianji.aigc.enums.ChatEventTypeEnum;
 import com.tianji.aigc.service.ChatService;
+import com.tianji.aigc.service.ChatSessionService;
 import com.tianji.common.utils.UserContext;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,8 @@ import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
+
+import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
@@ -35,6 +38,7 @@ public class ChatServiceImpl implements ChatService {
     private final ChatClient chatClient;
     private final ChatMemory chatMemory;
     private final VectorStore vectorStore;
+    private final ChatSessionService chatSessionService;
     private final SystemPromptConfig systemPromptConfig;
     private static final Map<String,Boolean> GENERATE_STATUS = new ConcurrentHashMap<>();
     // 输出结束的标记
@@ -53,6 +57,8 @@ public class ChatServiceImpl implements ChatService {
         var requestId = IdUtil.fastSimpleUUID();
         // 获取用户ID
         var userId = UserContext.getUser();
+        //更新会话时间
+        this.chatSessionService.update(sessionId,question, userId);
         return this.chatClient
                 .prompt()
                 .system(promptSystem -> promptSystem

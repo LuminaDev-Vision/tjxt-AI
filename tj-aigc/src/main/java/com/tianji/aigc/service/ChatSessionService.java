@@ -4,6 +4,7 @@ import com.tianji.aigc.domain.vo.MessageVO;
 import com.tianji.aigc.vo.SessionVO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ChatSessionService {
 
@@ -18,4 +19,20 @@ public interface ChatSessionService {
     List<SessionVO.Example> getHotQuestions(Integer num);
 
     List<MessageVO> queryBySessionId(String sessionId);
+
+    /**
+     * 更新会话更新时间
+     *
+     * @param sessionId 会话ID，用于标识特定的聊天会话
+     * @param title     新地会话标题，如果为空则不进行更新
+     * @param userId    用户ID
+     */
+    void update(String sessionId, String title, Long userId);
+
+
+    Map<String, List<com.tianji.aigc.vo.ChatSessionVO>> queryHistorySession();
+
+    void deleteHistorySession(String sessionId);
+
+    void updateTitle(String sessionId, String title);
 }
