@@ -1,5 +1,6 @@
 package com.tianji.aigc.controller;
 
+import com.tianji.aigc.domain.vo.ChatSessionVO;
 import com.tianji.aigc.domain.vo.MessageVO;
 import com.tianji.aigc.service.ChatSessionService;
 import lombok.RequiredArgsConstructor;
@@ -49,7 +50,7 @@ public class SessionController {
      * 查询历史会话列表
      */
     @GetMapping("/history")
-    public Map<String, List<com.tianji.aigc.vo.ChatSessionVO>> queryHistorySession() {
+    public Map<String, List<ChatSessionVO>> queryHistorySession() {
         return this.chatSessionService.queryHistorySession();
     }
 
