@@ -1,5 +1,6 @@
 package com.tianji.aigc.service;
 
+import com.tianji.aigc.domain.vo.ChatSessionVO;
 import com.tianji.aigc.domain.vo.MessageVO;
 import com.tianji.aigc.vo.SessionVO;
 
@@ -30,7 +31,7 @@ public interface ChatSessionService {
     void update(String sessionId, String title, Long userId);
 
 
-    Map<String, List<com.tianji.aigc.vo.ChatSessionVO>> queryHistorySession();
+    Map<String, List<ChatSessionVO>> queryHistorySession();
 
     void deleteHistorySession(String sessionId);
 
