@@ -16,7 +16,6 @@ import com.tianji.aigc.domain.po.ChatSession;
 import com.tianji.aigc.domain.vo.MessageVO;
 import com.tianji.aigc.enums.MessageTypeEnum;
 import com.tianji.aigc.mapper.ChatSessionMapper;
-import com.tianji.aigc.memory.MessageUtil;
 import com.tianji.aigc.memory.MyAssistantMessage;
 import com.tianji.aigc.service.ChatService;
 import com.tianji.aigc.service.ChatSessionService;
@@ -33,7 +32,6 @@ import org.springframework.ai.chat.messages.MessageType;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.sql.Wrapper;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
