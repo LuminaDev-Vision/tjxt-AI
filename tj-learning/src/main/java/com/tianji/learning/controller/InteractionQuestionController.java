@@ -2,8 +2,10 @@ package com.tianji.learning.controller;
 
 import com.tianji.common.domain.dto.PageDTO;
 import com.tianji.learning.domain.dto.QuestionFormDTO;
+import com.tianji.learning.domain.po.InteractionQuestion;
 import com.tianji.learning.domain.query.QuestionPageQuery;
 import com.tianji.learning.domain.vo.QuestionVO;
+import com.tianji.learning.service.AIService;
 import com.tianji.learning.service.IInteractionQuestionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -21,12 +23,15 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class InteractionQuestionController {
 
+    private final AIService aiService;
     private final IInteractionQuestionService questionService;
 
     @Operation(summary = "新增互动问题")
     @PostMapping
     public void saveQuestion(@Valid @RequestBody QuestionFormDTO questionDTO) {
-       questionService.saveQuestion(questionDTO);
+        InteractionQuestion interactionQuestion = questionService.saveQuestion(questionDTO);
+        // 调用AI自动回复
+        this.aiService.autoReply(interactionQuestion);
     }
 
     @Operation(summary = "修改提问")
@@ -55,4 +60,6 @@ public class InteractionQuestionController {
             @Parameter(description = "问题id", example = "1") @PathVariable("id") Long id) {
         questionService.deleteById(id);
     }
+
+
 }

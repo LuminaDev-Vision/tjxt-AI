@@ -35,7 +35,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @RequiredArgsConstructor
 public class ChatServiceImpl implements ChatService {
 
-    private final ChatClient chatClient;
+    private final ChatClient dashScopeChatClient;
+    private final ChatClient openAiChatClient;
     private final ChatMemory chatMemory;
     private final VectorStore vectorStore;
     private final ChatSessionService chatSessionService;
@@ -59,7 +60,7 @@ public class ChatServiceImpl implements ChatService {
         var userId = UserContext.getUser();
         //更新会话时间
         this.chatSessionService.update(sessionId,question, userId);
-        return this.chatClient
+        return this.dashScopeChatClient
                 .prompt()
                 .system(promptSystem -> promptSystem
                         .text(systemPromptConfig.getChatSystemMessage().get())
@@ -131,5 +132,15 @@ public class ChatServiceImpl implements ChatService {
     @Override
     public void stop(String sessionId) {
         GENERATE_STATUS.remove(sessionId);
+    }
+
+    @Override
+    public String chatText(String question) {
+        return this.openAiChatClient
+                .prompt()
+                .system(system->system.text(this.systemPromptConfig.getChatSystemMessage().get()))
+                .user(question)
+                .call()
+                .content();
     }
 }

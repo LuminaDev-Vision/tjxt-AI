@@ -37,6 +37,8 @@ tj:
           data-id: consult-agent-system-message.txt
         knowledge-agent:
           data-id: knowledge-agent-system-message.txt
+        text:
+          data-id: text-system-message.txt
   auth:
     resource:
       enable: true
