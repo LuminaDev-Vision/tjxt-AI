@@ -2,7 +2,8 @@ package com.tianji.aigc.config;
 
 
 
-import com.tianji.aigc.vo.SessionVO;
+
+import com.tianji.aigc.domain.vo.SessionVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

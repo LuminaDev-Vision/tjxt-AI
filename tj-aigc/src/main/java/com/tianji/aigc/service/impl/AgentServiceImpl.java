@@ -3,11 +3,13 @@ package com.tianji.aigc.service.impl;
 import cn.hutool.extra.spring.SpringUtil;
 import com.tianji.aigc.agent.AbstractAgent;
 import com.tianji.aigc.agent.Agent;
+import com.tianji.aigc.config.SystemPromptConfig;
 import com.tianji.aigc.domain.vo.ChatEventVO;
 import com.tianji.aigc.enums.AgentTypeEnum;
 import com.tianji.aigc.enums.ChatEventTypeEnum;
 import com.tianji.aigc.service.ChatService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 
@@ -16,6 +18,9 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class AgentServiceImpl implements ChatService {
+
+    private final ChatClient openAiChatClient;
+    private final SystemPromptConfig systemPromptConfig;
     @Override
     public Flux<ChatEventVO> chat(String question, String sessionId) {
         String result = this.findAgentByType(AgentTypeEnum.ROUTE).process(question, sessionId);
@@ -47,5 +52,14 @@ public class AgentServiceImpl implements ChatService {
     @Override
     public void stop(String sessionId) {
         this.findAgentByType(AgentTypeEnum.ROUTE).stop(sessionId);
+    }
+
+    @Override
+    public String chatText(String question) {
+        return this.openAiChatClient.prompt()
+                .system(promptSystem -> promptSystem.text(this.systemPromptConfig.getTextSystemMessage().get()))
+                .user(question)
+                .call()
+                .content();
     }
 }

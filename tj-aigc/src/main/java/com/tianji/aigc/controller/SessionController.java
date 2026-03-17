@@ -2,6 +2,7 @@ package com.tianji.aigc.controller;
 
 import com.tianji.aigc.domain.vo.ChatSessionVO;
 import com.tianji.aigc.domain.vo.MessageVO;
+import com.tianji.aigc.domain.vo.SessionVO;
 import com.tianji.aigc.service.ChatSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -22,7 +23,7 @@ public class SessionController {
      * @return 会话列表
      */
     @PostMapping
-    public com.tianji.aigc.vo.SessionVO createSession(@RequestParam(value = "n", defaultValue = "3") Integer num) {
+    public SessionVO createSession(@RequestParam(value = "n", defaultValue = "3") Integer num) {
         return chatSessionService.createSession(num);
     }
 
@@ -32,7 +33,7 @@ public class SessionController {
      * @return 问题列表
      */
     @GetMapping("/hot")
-    public List<com.tianji.aigc.vo.SessionVO.Example> getHotQuestions(@RequestParam(value = "n", defaultValue = "3") Integer num){
+    public List<SessionVO.Example> getHotQuestions(@RequestParam(value = "n", defaultValue = "3") Integer num){
         return chatSessionService.getHotQuestions(num);
     }
 

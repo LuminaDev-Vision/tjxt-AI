@@ -21,7 +21,7 @@ import com.tianji.aigc.memory.MyAssistantMessage;
 import com.tianji.aigc.service.ChatService;
 import com.tianji.aigc.service.ChatSessionService;
 
-import com.tianji.aigc.vo.SessionVO;
+import com.tianji.aigc.domain.vo.SessionVO;
 import com.tianji.common.utils.RandomUtils;
 import com.tianji.common.utils.UserContext;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +69,7 @@ public class ChatSessionServiceImpl extends ServiceImpl<ChatSessionMapper, ChatS
 
     @Override
     public List<SessionVO.Example> getHotQuestions(Integer num) {
+
         return RandomUtils.randomEleList(sessionProperties.getExamples(), num);
     }
 
