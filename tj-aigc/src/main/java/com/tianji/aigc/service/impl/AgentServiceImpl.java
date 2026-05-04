@@ -26,6 +26,7 @@ public class AgentServiceImpl implements ChatService {
         String result = this.findAgentByType(AgentTypeEnum.ROUTE).process(question, sessionId);
         AgentTypeEnum agentTypeEnum = AgentTypeEnum.agentNameOf(result);
         Agent agent = this.findAgentByType(agentTypeEnum);
+        // 如果找不到对应智能体，直接返回路由结果
         if (agent == null){
             ChatEventVO chatEventVO = ChatEventVO.builder()
                     .eventType(ChatEventTypeEnum.DATA.getValue())
