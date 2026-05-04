@@ -1,19 +1,38 @@
-# Created by .ignore support plugin (hsz.mobi)
-### Example user template template
-### Example user template
-
-# IntelliJ project files
+# ===== Java / Maven =====
 .idea
 *.iml
 out
 gen
 target
 *.class
-
-*.log
 .settings
 .project
 logs
 job
-
 templates
+
+# ===== Python =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+.venv/
+venv/
+env/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# ===== Environment =====
+.env
+
+# ===== Claude =====
+.claude/settings.local.json
+
+# ===== General =====
+*.log
+.vscode/
