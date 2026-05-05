@@ -16,8 +16,8 @@ async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit
 
 
 async def init_db():
-    async with engine.begin() as conn:
-        await conn.run_sync(SQLModel.metadata.create_all)
+    """表由 Java 版 tj-aigc 管理，Python 版不做 DDL 操作"""
+    pass
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
