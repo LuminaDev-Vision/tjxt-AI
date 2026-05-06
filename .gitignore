@@ -1,20 +1,30 @@
 # ===== Java / Maven =====
-.idea
+.idea/
 *.iml
-out
-gen
-target
+*.iws
+*.ipr
+out/
+gen/
+target/
 *.class
-.settings
+*.jar
+*.war
+*.ear
+*.nar
+.settings/
 .project
-logs
-job
-templates
+.classpath
+.factorypath
+logs/
+job/
+templates/
+spring-shell.log
 
 # ===== Python =====
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
 *.egg-info/
 dist/
 build/
@@ -26,13 +36,46 @@ env/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.pytype/
+.coverage
+.coverage.*
+htmlcov/
+*.cover
+.hypothesis/
+pip-log.txt
+pip-delete-this-directory.txt
+.python-version
 
 # ===== Environment =====
 .env
+.env.*
+!.env.example
 
 # ===== Claude =====
 .claude/settings.local.json
 
+# ===== OS =====
+.DS_Store
+.DS_Store?
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# ===== Editor =====
+.vscode/
+*.swp
+*.swo
+*~
+*.sublime-project
+*.sublime-workspace
+
 # ===== General =====
 *.log
-.vscode/
+*.wolf
+*.bak
+*.orig
+*.tmp
+*.temp
+package-lock.json
