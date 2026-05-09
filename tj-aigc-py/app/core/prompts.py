@@ -1,81 +1,63 @@
 import logging
-import os
+from enum import Enum
 from pathlib import Path
 
 logger = logging.getLogger(__name__)
 
 _PROMPTS_DIR = Path(__file__).parent.parent.parent / "prompts"
 
-_prompts: dict[str, str] = {}
 
-_PROMPT_KEY_MAP = {
-    "chat": "PROMPT_CHAT_DATA_ID",
-    "route_agent": "PROMPT_ROUTE_AGENT_DATA_ID",
-    "recommend_agent": "PROMPT_RECOMMEND_AGENT_DATA_ID",
-    "buy_agent": "PROMPT_BUY_AGENT_DATA_ID",
-    "consult_agent": "PROMPT_CONSULT_AGENT_DATA_ID",
-    "knowledge_agent": "PROMPT_KNOWLEDGE_AGENT_DATA_ID",
-    "text": "PROMPT_TEXT_DATA_ID",
-}
+class PromptKey(str, Enum):
+    CHAT = "chat"
+    ROUTE_AGENT = "route_agent"
+    RECOMMEND_AGENT = "recommend_agent"
+    BUY_AGENT = "buy_agent"
+    CONSULT_AGENT = "consult_agent"
+    KNOWLEDGE_AGENT = "knowledge_agent"
+    TEXT = "text"
 
-
-def _load_from_file(data_id: str) -> str:
-    file_path = _PROMPTS_DIR / data_id
-    if file_path.exists():
-        return file_path.read_text(encoding="utf-8").strip()
-    return ""
+    @property
+    def file_name(self) -> str:
+        return self.value.replace("_", "-") + "-system-message.txt"
 
 
-def _load_from_nacos(data_id: str) -> str:
-    try:
-        import nacos
+class PromptManager:
+    _instance: "PromptManager | None" = None
+    _prompts: dict[str, str] = {}
 
-        from app.core.config import settings
+    def __new__(cls) -> "PromptManager":
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+        return cls._instance
 
-        client = nacos.NacosClient(
-            settings.NACOS_SERVER_ADDR,
-            namespace=settings.NACOS_NAMESPACE,
-            username=settings.NACOS_USERNAME,
-            password=settings.NACOS_PASSWORD,
-        )
-        resp = client.get_config(data_id, settings.NACOS_GROUP)
-        return resp.get("content", "").strip() if resp else ""
-    except Exception as e:
-        logger.warning("Failed to load prompt from Nacos: %s", e)
-        return _load_from_file(data_id)
+    def load_all(self):
+        for key in PromptKey:
+            file_path = _PROMPTS_DIR / key.file_name
+            if file_path.exists():
+                self._prompts[key.value] = file_path.read_text(encoding="utf-8").strip()
+            else:
+                logger.warning("Prompt file not found: %s", file_path)
+                self._prompts[key.value] = ""
+
+    def get(self, key: PromptKey, **kwargs: str) -> str:
+        if not self._prompts:
+            self.load_all()
+        template = self._prompts.get(key.value, "")
+        if kwargs and template:
+            return self._render(template, kwargs)
+        return template
+
+    def reload(self, key: PromptKey):
+        file_path = _PROMPTS_DIR / key.file_name
+        if file_path.exists():
+            self._prompts[key.value] = file_path.read_text(encoding="utf-8").strip()
+
+    @staticmethod
+    def _render(template: str, variables: dict[str, str]) -> str:
+        result = template
+        for k, v in variables.items():
+            result = result.replace(f"{{{k}}}", v)
+        return result
 
 
-def load_all_prompts():
-    from app.core.config import settings
-
-    for key, config_key in _PROMPT_KEY_MAP.items():
-        data_id = getattr(settings, config_key, "")
-        if not data_id:
-            continue
-        if settings.NACOS_ENABLED:
-            _prompts[key] = _load_from_nacos(data_id)
-        else:
-            _prompts[key] = _load_from_file(data_id)
-        if not _prompts[key]:
-            logger.warning("Prompt '%s' is empty (data_id=%s)", key, data_id)
-
-
-def get_prompt(key: str) -> str:
-    if not _prompts:
-        load_all_prompts()
-    return _prompts.get(key, "")
-
-
-def reload_prompt(key: str):
-    from app.core.config import settings
-
-    config_key = _PROMPT_KEY_MAP.get(key)
-    if not config_key:
-        return
-    data_id = getattr(settings, config_key, "")
-    if not data_id:
-        return
-    if settings.NACOS_ENABLED:
-        _prompts[key] = _load_from_nacos(data_id)
-    else:
-        _prompts[key] = _load_from_file(data_id)
+prompt_manager = PromptManager()

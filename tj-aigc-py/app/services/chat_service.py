@@ -4,7 +4,7 @@ from collections.abc import AsyncGenerator
 from app.agents.registry import get_agent
 from app.agents.route_agent import RouteAgent
 from app.clients.openai_client import openai_chat_text
-from app.core.prompts import get_prompt
+from app.core.prompts import PromptKey, prompt_manager
 from app.memory.redis_chat_memory import RedisChatMemory
 from app.schemas.chat import ChatEventVO, STOP_EVENT
 from app.schemas.enums import AgentTypeEnum, ChatEventTypeEnum
@@ -54,7 +54,7 @@ class ChatService:
 
     async def chat_text(self, question: str) -> str:
         messages = [
-            {"role": "system", "content": get_prompt("text")},
+            {"role": "system", "content": prompt_manager.get(PromptKey.TEXT)},
             {"role": "user", "content": question},
         ]
         return await openai_chat_text(messages)

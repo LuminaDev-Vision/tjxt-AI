@@ -4,11 +4,16 @@ from typing import Any, Optional
 from pydantic import BaseModel
 
 
+class Example(BaseModel):
+    title: str
+    describe: str
+
+
 class SessionVO(BaseModel):
     session_id: str
     title: str
     describe: str
-    examples: list[str]
+    examples: list[Example]
 
 
 class ChatSessionVO(BaseModel):

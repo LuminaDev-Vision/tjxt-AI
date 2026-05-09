@@ -3,6 +3,7 @@ from abc import ABC, abstractmethod
 from collections.abc import AsyncGenerator
 from typing import Any
 
+from app.core.prompts import PromptKey, prompt_manager
 from app.memory.redis_chat_memory import RedisChatMemory
 from app.schemas.chat import ChatEventVO, STOP_EVENT
 from app.schemas.enums import AgentTypeEnum, ChatEventTypeEnum
@@ -20,8 +21,15 @@ class AbstractAgent(ABC):
     @abstractmethod
     def get_agent_type(self) -> AgentTypeEnum: ...
 
-    @abstractmethod
-    def system_message(self) -> str: ...
+    @property
+    def prompt_key(self) -> PromptKey | None:
+        return None
+
+    def system_message(self) -> str:
+        key = self.prompt_key
+        if key is None:
+            return ""
+        return prompt_manager.get(key, **self.system_message_params())
 
     def system_message_params(self) -> dict[str, Any]:
         return {}

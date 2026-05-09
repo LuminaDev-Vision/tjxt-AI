@@ -65,24 +65,6 @@ class Settings(BaseSettings):
     EMBEDDING_MODEL: str = "text-embedding-v3"
     EMBEDDING_DIMS: int = 1536
 
-    # ---- Nacos ----
-    NACOS_SERVER_ADDR: str = "192.168.150.101:8848"
-    NACOS_NAMESPACE: str = "f923fb34-cb0a-4c06-8fca-ad61ea61a3f0"
-    NACOS_USERNAME: str = "nacos"
-    NACOS_PASSWORD: str = "nacos"
-    NACOS_GROUP: str = "DEFAULT_GROUP"
-    NACOS_TIMEOUT_MS: int = 20000
-    NACOS_ENABLED: bool = True
-
-    # ---- System Prompt Nacos DataIds ----
-    PROMPT_CHAT_DATA_ID: str = "system-chat-message.txt"
-    PROMPT_ROUTE_AGENT_DATA_ID: str = "route-agent-system-message.txt"
-    PROMPT_RECOMMEND_AGENT_DATA_ID: str = "recommend-agent-system-message.txt"
-    PROMPT_BUY_AGENT_DATA_ID: str = "buy-agent-system-message.txt"
-    PROMPT_CONSULT_AGENT_DATA_ID: str = "consult-agent-system-message.txt"
-    PROMPT_KNOWLEDGE_AGENT_DATA_ID: str = "knowledge-agent-system-message.txt"
-    PROMPT_TEXT_DATA_ID: str = "text-system-message.txt"
-
     # ---- Session 配置 ----
     SESSION_TITLE: str = "天机学堂AI助手"
     SESSION_DESCRIBE: str = "我是天机学堂的AI助手，有什么可以帮您的？"
